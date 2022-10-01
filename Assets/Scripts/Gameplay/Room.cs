@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Room : MonoBehaviour
@@ -35,15 +36,20 @@ public class Room : MonoBehaviour
         m_VirtualCam.SetActive(true);
 
         if (m_LeftWall != null)
-            m_LeftWall.SetActive(true);
+            StartCoroutine(ActivateLeftWall());
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player") || other.isTrigger)
             return;
-
         m_Player = null;
         m_VirtualCam.SetActive(false);
+    }
+
+    private IEnumerator ActivateLeftWall()
+    {
+        yield return new WaitForSeconds(0.5f);
+        m_LeftWall.SetActive(true);
     }
 }
