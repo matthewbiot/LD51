@@ -4,7 +4,21 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
+    [SerializeField] GameObject m_EnemyPrefab;
+    [SerializeField] Room m_StartingRoom;
     [SerializeField] string m_NextLevel;
+
+    void Start()
+    {
+        if (m_EnemyPrefab == null || m_StartingRoom == null)
+            return;
+
+        var gameObject = Instantiate(m_EnemyPrefab);
+        var enemy = gameObject.GetComponent<Enemy>();
+        m_StartingRoom.SetEnemyPosition(enemy);
+
+        GameManager.instance?.SetEnemy(enemy);
+    }
 
     public void LoadNextLevel()
     {

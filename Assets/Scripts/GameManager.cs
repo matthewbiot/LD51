@@ -17,6 +17,13 @@ public class GameManager : MonoBehaviour
 
 
     private int m_Deaths;
+    private Room m_CurrentRoom;
+    private Enemy m_CurrentEnemy;
+
+    private string m_SceneToUnload;
+    private string m_CurrentLoadingScene;
+
+    public Enemy Enemy => m_CurrentEnemy;
 
     public void Awake()
     {
@@ -40,9 +47,6 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private string m_SceneToUnload;
-    private string m_CurrentLoadingScene;
-
     public void LoadLevel(string levelName)
     {
         m_Crossfade.FadeOut(m_FadeTime, () =>
@@ -53,9 +57,24 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    public void IncrementDeathCounter()
+    public void SetRoom(Room room)
     {
-        m_Deaths++;
+        m_CurrentRoom = room;
+    }
+
+    public void SetEnemy(Enemy enemy)
+    {
+        m_CurrentEnemy = enemy;
+    }
+
+    public void KillPlayer()
+    {
+        m_Crossfade.FadeOut(0.2f, () =>
+        {
+            m_Deaths++;
+            m_CurrentRoom.Restart(m_CurrentEnemy);
+            m_Crossfade.FadeIn(0.2f);
+        });
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

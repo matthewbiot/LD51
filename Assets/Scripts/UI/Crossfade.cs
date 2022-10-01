@@ -5,9 +5,21 @@ using UnityEngine;
 
 public class Crossfade : MonoBehaviour
 {
+    private static Crossfade s_Instance;
+
+    public static Crossfade instance => s_Instance;
+
     [SerializeField] CanvasGroup m_Group;
 
     private Coroutine m_FadeCoroutine;
+
+    void Awake()
+    {
+        if (s_Instance != null && s_Instance != this)
+            Destroy(this);
+        else
+            s_Instance = this;
+    }
 
     public void FadeOut(float fadeTime, Action onComplete = null)
     {

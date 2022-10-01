@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class StartPoint : MonoBehaviour
 {
+    [SerializeField] bool m_Enemy;
+
     void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = m_Enemy ? Color.red : Color.blue;
         Gizmos.DrawWireSphere(transform.position, 0.5f);
     }
 }

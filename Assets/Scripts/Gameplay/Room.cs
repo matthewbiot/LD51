@@ -1,30 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Room : MonoBehaviour
 {
     [SerializeField] GameObject m_LeftWall;
-    [SerializeField] GameObject m_StartPoint;
+    [SerializeField] StartPoint m_StartPoint;
+    [SerializeField] StartPoint m_EnemyStartPoint;
     [SerializeField] GameObject m_VirtualCam;
 
     private PlayerController m_Player;
 
-    void Start()
-    {
-        foreach (var trap in GetComponentsInChildren<Trap>())
-            trap.RegisterRoom(this);
-    }
-
-    public void Restart()
+    public void Restart(Enemy enemy)
     {
         m_Player.transform.position = m_StartPoint.transform.position;
+
+        SetEnemyPosition(enemy);
+    }
+
+    public void SetEnemyPosition(Enemy enemy)
+    {
+        if (enemy == null || m_EnemyStartPoint == null)
+            return;
+        enemy.transform.position = m_EnemyStartPoint.transform.position;
+        enemy.Reset();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player") || other.isTrigger)
             return;
+
+        GameManager.instance?.SetRoom(this);
 
         m_Player = other.GetComponent<PlayerController>();
         m_VirtualCam.SetActive(true);
