@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_WalkSpeed = 2f;
     [SerializeField] private float m_CoyoteTime = 0.2f;
     [SerializeField] private float m_CurrentMovementLerpSpeed = 100;
+    [SerializeField] private float m_SlideSpeed = 1;
+    [SerializeField] private float m_ExitSlideTime = 0.5f;
 
     [Header("Jump")]
     [SerializeField] private float m_JumpForce = 15;
@@ -19,27 +21,36 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_FallMultiplier = 7f;
     [SerializeField] private bool m_EnableDoubleJump;
 
-
     [Header("Wall Jump")]
     [SerializeField] private float m_WallJumpMovementLerp = 5;
+
+    [Header("Dash")]
+    [SerializeField] private float m_DashSpeed = 15;
+    [SerializeField] private float m_DashLength = 1;
+
 
     [Header("Detection")]
     [SerializeField] private LayerMask m_GroundMask;
     [SerializeField] private float m_GrounderOffset = -1, m_GrounderRadius = 0.2f;
-
+    [SerializeField] private float m_WallCheckOffset = -1, m_WallCheckRadius = 0.2f;
 
     private PlayerInputActions m_Inputs;
     private InputAction m_Move;
 
     // Ground
     private readonly Collider2D[] m_Ground = new Collider2D[1];
-    [SerializeField] bool m_Grounded;
+    private readonly Collider2D[] m_LeftWall = new Collider2D[1];
+    private readonly Collider2D[] m_RightWall = new Collider2D[1];
+    private bool m_Grounded;
     private bool m_IsFacingLeft;
     private float m_TimeLeftGrounded = -10f;
 
-    private bool m_Grabbing;
     private bool m_IsAgainstLeftWall, m_IsAgainstRightWall;
+    private bool m_PushingLeftWall, m_PushingRightWall;
     private bool againstWall => m_IsAgainstLeftWall || m_IsAgainstRightWall;
+    private bool pushingAgainstWall => m_PushingLeftWall || m_PushingRightWall;
+    private bool m_WallSliding;
+    private float m_TimeStartedSliding;
 
 
     // Jump
@@ -50,6 +61,8 @@ public class PlayerController : MonoBehaviour
     // Dash
     private bool m_Dashing;
     private bool m_HasDashed;
+    private Vector3 m_DashDirection;
+    private float m_TimeStartedDash;
 
     // Inputs
     private Vector2 m_Movement;
@@ -74,6 +87,7 @@ public class PlayerController : MonoBehaviour
         HandleGround();
         HandleWalk();
         HandleJump();
+        HandleWallSlide();
         HandleDash();
     }
 
@@ -138,11 +152,33 @@ public class PlayerController : MonoBehaviour
             m_Grounded = false;
             m_TimeLeftGrounded = Time.time;
         }
+
+        // Wall detection
+        m_IsAgainstLeftWall = Physics2D.OverlapCircleNonAlloc(transform.position + new Vector3(-m_WallCheckOffset, 0), m_WallCheckRadius, m_LeftWall, m_GroundMask) > 0;
+        m_IsAgainstRightWall = Physics2D.OverlapCircleNonAlloc(transform.position + new Vector3(m_WallCheckOffset, 0), m_WallCheckRadius, m_RightWall, m_GroundMask) > 0;
+        m_PushingLeftWall = m_IsAgainstLeftWall && m_Movement.x < 0;
+        m_PushingRightWall = m_IsAgainstRightWall && m_Movement.x > 0;
+
+        // If we are wall sliding
+        if (m_WallSliding)
+        {
+            if (!againstWall)
+                m_WallSliding = false;
+            else
+            {
+                if (Time.time >= m_TimeStartedSliding + m_ExitSlideTime &&
+                ((m_IsAgainstLeftWall && m_Movement.x > 0) ||
+                // Or we are on the right wall but pushing left
+                (m_IsAgainstRightWall && m_Movement.x < 0)))
+                    m_WallSliding = false;
+
+            }
+        }
     }
 
     private void HandleWalk()
     {
-        //m_CurrentMovementLerpSpeed = Mathf.MoveTowards(m_CurrentMovementLerpSpeed, 100, m_WallJumpMovementLerp * Time.fixedDeltaTime);
+        m_CurrentMovementLerpSpeed = Mathf.MoveTowards(m_CurrentMovementLerpSpeed, 100, m_WallJumpMovementLerp * Time.fixedDeltaTime);
 
         if (m_Dashing)
             return;
@@ -175,8 +211,10 @@ public class PlayerController : MonoBehaviour
         if (!m_JumpPressedLastFrame && m_JumpPressed)
         {
             //Debug.Log("Jump");
-            if (m_Grabbing || !m_Grounded && againstWall)
+            if (m_WallSliding)
             {
+                // m_CurrentMovementLerpSpeed = m_WallJumpMovementLerp;
+                Jump(new Vector2(m_IsAgainstLeftWall ? m_JumpForce : -m_JumpForce, m_JumpForce));
                 //Debug.Log("against the wall");
             }
             else if (m_Grounded || (!m_HasJumped && Time.time < m_TimeLeftGrounded + m_CoyoteTime) || (m_EnableDoubleJump && !m_HasDoubleJumped))
@@ -191,12 +229,52 @@ public class PlayerController : MonoBehaviour
             m_RigidBody.velocity += m_FallMultiplier * Physics.gravity.y * Vector2.up * Time.fixedDeltaTime;
     }
 
-    private void HandleDash()
+    private void HandleWallSlide()
     {
+        if (pushingAgainstWall && !m_WallSliding)
+        {
+            m_WallSliding = true;
+            m_TimeStartedSliding = Time.time;
+        }
 
+        if (m_WallSliding)
+        {
+            if (m_RigidBody.velocity.y < 0)
+                m_RigidBody.velocity = new Vector3(0, -m_SlideSpeed);
+        }
     }
 
-    private void Jump(Vector2 direction, bool doubleJump)
+    private void HandleDash()
+    {
+        if (m_DashPressed && !m_HasDashed)
+        {
+            m_DashDirection = new Vector3(m_Movement.normalized.x, 0);
+            if (m_DashDirection == Vector3.zero)
+                m_DashDirection = m_IsFacingLeft ? Vector3.left : Vector3.right;
+
+            m_Dashing = true;
+            m_HasDashed = true;
+            m_TimeStartedDash = Time.time;
+            m_RigidBody.gravityScale = 0;
+        }
+
+        if (m_Dashing)
+        {
+            m_RigidBody.velocity = m_DashDirection * m_DashSpeed;
+
+            if (Time.time >= m_TimeStartedDash + m_DashLength)
+            {
+                m_Dashing = false;
+
+                if (m_Grounded)
+                    m_HasDashed = false;
+
+                m_RigidBody.gravityScale = 1;
+            }
+        }
+    }
+
+    private void Jump(Vector2 direction, bool doubleJump = false)
     {
         Debug.Log("Jump");
         m_RigidBody.velocity = direction;
@@ -212,17 +290,17 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position + new Vector3(0, m_GrounderOffset), m_GrounderRadius);
     }
 
-    // private void DrawWallSlideGizmos()
-    // {
-    //     Gizmos.color = Color.red;
-    //     Gizmos.DrawWireSphere(transform.position + new Vector3(-m_WallCheckOffset, 0), m_WallCheckRadius);
-    //     Gizmos.DrawWireSphere(transform.position + new Vector3(m_WallCheckOffset, 0), m_WallCheckRadius);
-    // }
+    private void DrawWallSlideGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + new Vector3(-m_WallCheckOffset, 0), m_WallCheckRadius);
+        Gizmos.DrawWireSphere(transform.position + new Vector3(m_WallCheckOffset, 0), m_WallCheckRadius);
+    }
 
     private void OnDrawGizmos()
     {
         DrawGrounderGizmos();
-        //DrawWallSlideGizmos();
+        DrawWallSlideGizmos();
     }
 
 }

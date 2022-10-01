@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance => s_Instance;
 
+
+    private int m_Deaths;
+
     public void Awake()
     {
         if (s_Instance != null && s_Instance != this)
@@ -28,22 +31,8 @@ public class GameManager : MonoBehaviour
 
     }
 
-
-    public void PreloadLevel(string level)
+    public void IncrementDeathCounter()
     {
-
-    }
-
-    public void LoadLevel(string level)
-    {
-        if (string.IsNullOrWhiteSpace(level))
-            return;
-
-        var sceneName = string.Format(k_LevelSceneName, level);
-
-        if (SceneManager.GetActiveScene().name == sceneName)
-            return;
-
-        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        m_Deaths++;
     }
 }
