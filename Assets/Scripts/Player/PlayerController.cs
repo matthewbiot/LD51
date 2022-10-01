@@ -58,16 +58,10 @@ public class PlayerController : MonoBehaviour
     private bool m_JumpPressed;
     private bool m_DashPressed;
 
-
-    void Start()
+    void Awake()
     {
         m_Inputs = new PlayerInputActions();
-        m_Inputs.Game.Enable();
-
-        m_Move = m_Inputs.Game.Move;
-
-        Inputs.Add(m_Inputs.Game.Jump, OnJump);
-        Inputs.Add(m_Inputs.Game.Dash, OnDash);
+        EnableInputs();
     }
 
     void Update()
@@ -84,6 +78,21 @@ public class PlayerController : MonoBehaviour
     }
 
     void OnDestroy()
+    {
+        DisableInputs();
+    }
+
+    public void EnableInputs()
+    {
+        m_Inputs.Game.Enable();
+
+        m_Move = m_Inputs.Game.Move;
+
+        Inputs.Add(m_Inputs.Game.Jump, OnJump);
+        Inputs.Add(m_Inputs.Game.Dash, OnDash);
+    }
+
+    public void DisableInputs()
     {
         if (m_Inputs == null)
             return;
@@ -133,7 +142,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWalk()
     {
-        m_CurrentMovementLerpSpeed = Mathf.MoveTowards(m_CurrentMovementLerpSpeed, 100, m_WallJumpMovementLerp * Time.fixedDeltaTime);
+        //m_CurrentMovementLerpSpeed = Mathf.MoveTowards(m_CurrentMovementLerpSpeed, 100, m_WallJumpMovementLerp * Time.fixedDeltaTime);
 
         if (m_Dashing)
             return;
