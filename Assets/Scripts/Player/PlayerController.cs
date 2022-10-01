@@ -171,7 +171,6 @@ public class PlayerController : MonoBehaviour
                 // Or we are on the right wall but pushing left
                 (m_IsAgainstRightWall && m_Movement.x < 0)))
                     m_WallSliding = false;
-
             }
         }
     }
