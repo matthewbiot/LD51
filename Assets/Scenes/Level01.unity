@@ -1449,34 +1449,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990149, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990152, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_DashSpeed
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990152, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_DashLength
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990152, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_SlideSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990152, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_ExitSlideTime
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990152, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_WallCheckOffset
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990152, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_WallCheckRadius
-      value: 0.15
-      objectReference: {fileID: 0}
     - target: {fileID: 8209381972663990153, guid: 1007c168a7c23af449d900241116e986, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -1520,10 +1492,6 @@ PrefabInstance:
     - target: {fileID: 8209381972663990153, guid: 1007c168a7c23af449d900241116e986, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8209381972663990154, guid: 1007c168a7c23af449d900241116e986, type: 3}
-      propertyPath: m_SortingOrder
-      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1007c168a7c23af449d900241116e986, type: 3}
@@ -2271,6 +2239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EnemyPrefab: {fileID: 0}
+  m_LoadEnemy: 1
   m_StartingRoom: {fileID: 0}
   m_NextLevel: Level02
 --- !u!114 &1587831499

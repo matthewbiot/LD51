@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 8209381972663990148}
   - component: {fileID: 8209381972663990159}
   - component: {fileID: 8209381972663990152}
+  - component: {fileID: 1283363219}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -75,8 +76,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_SortingOrder: 100
+  m_Sprite: {fileID: 607728788, guid: f73f587ced53e6a4ba404be8d96c1243, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -136,19 +137,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c099cb9f35022164086d0f202584d844, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SpriteRenderer: {fileID: 8209381972663990154}
   m_RigidBody: {fileID: 8209381972663990148}
+  m_Animator: {fileID: 1283363219}
+  m_IdleSheet: {fileID: 11400000, guid: 4631f9ae1cb523e43be5197ac2486b69, type: 2}
+  m_RunSheet: {fileID: 11400000, guid: 397ce1096b178ce49b56443d14379fcd, type: 2}
+  m_JumpSheet: {fileID: 11400000, guid: 696b91ab44ab8b147a36c02dc892c3b8, type: 2}
+  m_FallSheet: {fileID: 11400000, guid: fd25906bfcd68f24684265e404a5ea5e, type: 2}
+  m_WallSlideSheet: {fileID: 11400000, guid: 237313746e09bb0438ee9780d57ff9f4, type: 2}
+  m_DashSheet: {fileID: 11400000, guid: f8112c63334b1bf499f0050c9f926f8b, type: 2}
   m_Acceleration: 2
   m_WalkSpeed: 10
   m_CoyoteTime: 0.2
   m_CurrentMovementLerpSpeed: 100
+  m_SlideSpeed: 4
+  m_ExitSlideTime: 0.3
   m_JumpForce: 22
   m_JumpVelocityFalloff: 22.5
   m_FallMultiplier: 7
   m_EnableDoubleJump: 1
   m_WallJumpMovementLerp: 5
+  m_DashSpeed: 35
+  m_DashLength: 0.1
   m_GroundMask:
     serializedVersion: 2
     m_Bits: 64
   m_GrounderOffset: -0.5
   m_GrounderRadius: 0.15
-  m_Grounded: 0
+  m_WallCheckOffset: 0.5
+  m_WallCheckRadius: 0.15
+--- !u!114 &1283363219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8209381972663990149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eee02a5f5aff6840b70b82a6602295f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SpriteRenderer: {fileID: 8209381972663990154}

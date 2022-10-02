@@ -5,7 +5,17 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] SpriteRenderer m_SpriteRenderer;
     [SerializeField] Rigidbody2D m_RigidBody;
+    [SerializeField] SpriteAnimator m_Animator;
+
+    [Header("Animation")]
+    [SerializeField] Sheet m_IdleSheet;
+    [SerializeField] Sheet m_RunSheet;
+    [SerializeField] Sheet m_JumpSheet;
+    [SerializeField] Sheet m_FallSheet;
+    [SerializeField] Sheet m_WallSlideSheet;
+    [SerializeField] Sheet m_DashSheet;
 
     [Header("Walk")]
     [SerializeField] private float m_Acceleration = 2f;
@@ -77,6 +87,11 @@ public class PlayerController : MonoBehaviour
         EnableInputs();
     }
 
+    void Start()
+    {
+        m_Animator.Play(m_IdleSheet, true);
+    }
+
     void Update()
     {
         GatherInputs();
@@ -89,6 +104,7 @@ public class PlayerController : MonoBehaviour
         HandleJump();
         HandleWallSlide();
         HandleDash();
+        HandleAnimation();
     }
 
     void OnDestroy()
@@ -272,6 +288,41 @@ public class PlayerController : MonoBehaviour
                 m_RigidBody.gravityScale = 1;
             }
         }
+    }
+
+    private enum State
+    {
+        Idle,
+        Run,
+        Jump,
+        Fall,
+        Dash,
+        WallSlide
+    }
+
+    private State m_State;
+
+    private void HandleAnimation()
+    {
+        var flipX = m_RigidBody.velocity.x < 0;
+
+        if (m_Dashing)
+            m_Animator.Play(m_DashSheet, false, sheet => sheet != m_DashSheet);
+        else if (m_WallSliding)
+        {
+            flipX = m_IsAgainstRightWall;
+            m_Animator.Play(m_WallSlideSheet, true, sheet => sheet != m_WallSlideSheet);
+        }
+        else if (!m_Grounded && m_RigidBody.velocity.y <= 0)
+            m_Animator.Play(m_FallSheet, true, sheet => sheet != m_FallSheet);
+        else if (!m_Grounded && m_RigidBody.velocity.y > 0)
+            m_Animator.Play(m_JumpSheet, false, sheet => sheet != m_JumpSheet);
+        else if (m_Grounded && m_RigidBody.velocity.x != 0)
+            m_Animator.Play(m_RunSheet, false, sheet => sheet != m_RunSheet);
+        else
+            m_Animator.Play(m_IdleSheet, false, sheet => sheet != m_IdleSheet);
+
+        m_SpriteRenderer.flipX = flipX;
     }
 
     private void Jump(Vector2 direction, bool doubleJump = false)

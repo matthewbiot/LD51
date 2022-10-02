@@ -8,6 +8,15 @@ public class Enemy : MonoBehaviour
 
     [Header("References")]
     [SerializeField] Rigidbody2D m_RigidBody;
+    [SerializeField] SpriteAnimator m_Animator;
+    [SerializeField] SpriteRenderer m_SpriteRenderer;
+
+    [Header("Animation")]
+    [SerializeField] Sheet m_FollowSheet;
+    [SerializeField] Sheet m_DashUpSheet;
+    [SerializeField] Sheet m_DashForwardSheet;
+    [SerializeField] Sheet m_ChargingSheet;
+
 
     [Header("Chase")]
     [SerializeField] float m_MinDistance;
@@ -126,6 +135,8 @@ public class Enemy : MonoBehaviour
         m_DistanceLastFrame = distance;
         m_Speed = Mathf.MoveTowards(m_Speed, speed, lerp * Time.deltaTime);
         m_Direction = direction;
+
+        HandleAnimation();
     }
 
     void FixedUpdate()
@@ -169,6 +180,28 @@ public class Enemy : MonoBehaviour
             Mathf.Pow(m_Target.transform.position.x - transform.position.x, 2) +
             Mathf.Pow(m_Target.transform.position.y - transform.position.y, 2)
         );
+    }
+
+    private void HandleAnimation()
+    {
+        bool flipX = m_Direction.x < 0;
+        bool flipY = false;
+        if (m_Dashing)
+        {
+            var vertical = Mathf.Abs(m_Direction.y) > Mathf.Abs(m_Direction.x);
+            if (vertical && m_Direction.y < 0)
+                flipY = true;
+            var newSheet = vertical ? m_DashUpSheet : m_DashForwardSheet;
+            flipX = m_DashDirection.x < 0;
+            m_Animator.Play(newSheet, true, sheet => sheet != newSheet);
+        }
+        else if (m_Stopping || m_Charging)
+            m_Animator.Play(m_ChargingSheet, true, sheet => sheet != m_ChargingSheet);
+        else
+            m_Animator.Play(m_FollowSheet, true, sheet => sheet != m_FollowSheet);
+
+        m_SpriteRenderer.flipX = flipX;
+        m_SpriteRenderer.flipY = flipY;
     }
 
 }
