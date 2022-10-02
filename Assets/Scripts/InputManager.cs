@@ -20,7 +20,6 @@ public class InputManager : MonoBehaviour
         else
         {
             s_Instance = this;
-            DontDestroyOnLoad(this);
         }
     }
 
