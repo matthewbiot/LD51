@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Enemy : MonoBehaviour
 {
@@ -9,22 +10,33 @@ public class Enemy : MonoBehaviour
     [SerializeField] Rigidbody2D m_RigidBody;
 
     [Header("Chase")]
+    [SerializeField] float m_MinDistance;
     [SerializeField] float m_MaxDistance;
+    [SerializeField] float m_FollowSpeed;
+    [SerializeField] float m_FollowSpeedLerp = 2;
+    [SerializeField] float m_FollowDeceleration = 10;
+    [SerializeField] AnimationCurve m_ChaseCurve;
     [SerializeField] float m_ChaseSpeed;
+    [SerializeField] float m_ChaseSpeedLerp = 10;
 
     [Header("Dash")]
     [SerializeField] float m_DashReactionStartTime;
     [SerializeField] float m_DashReactionEndTime;
+    [SerializeField] float m_ChargingDistance;
+    [SerializeField] AnimationCurve m_ChargingCurve;
     [SerializeField] float m_DashSpeed;
     [SerializeField] float m_DashLength;
 
     private GameObject m_Target;
 
+    private float m_DistanceLastFrame;
     private Vector2 m_Direction;
     private float m_Speed;
 
     private bool m_Stopping;
     private float m_StoppingSpeed;
+    private bool m_Charging;
+    private Vector2 m_ChargingDirection;
     private bool m_Dashing;
     private Vector2 m_DashDirection;
     private float m_TimeSinceLastDash;
@@ -59,19 +71,31 @@ public class Enemy : MonoBehaviour
         if (m_Dashing)
             return;
 
-        var distance = m_Target.transform.position - transform.position;
+        var distance = GetDistance();
+        var direction = (m_Target.transform.position - transform.position).normalized;
 
         if (m_TimeSinceLastDash >= k_DashTime)
         {
-            m_DashDirection = distance.normalized;
+            m_DashDirection = direction;
             m_Dashing = true;
+            m_Charging = false;
             m_TimeStartedDash = Time.time;
             return;
         }
         m_TimeSinceLastDash += Time.deltaTime;
 
         var reactionTime = k_DashTime - m_TimeSinceLastDash;
-        if (reactionTime <= m_DashReactionStartTime)
+        if (reactionTime <= m_DashReactionEndTime)
+        {
+            m_Stopping = false;
+            m_Charging = true;
+            var chargingDirection = direction * -1;
+
+            var t = (m_DashReactionEndTime - reactionTime) / m_DashReactionEndTime;
+            var p = m_ChargingCurve.Evaluate(t);
+            m_ChargingDirection = new Vector2(m_ChargingDistance, m_ChargingDistance) * p;
+        }
+        else if (reactionTime <= m_DashReactionStartTime)
         {
             if (!m_Stopping)
                 m_StoppingSpeed = m_Speed;
@@ -81,23 +105,39 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        var longestDistance = Mathf.Max(Mathf.Abs(distance.x), Mathf.Abs(distance.y));
+        var speed = m_Speed;
+        var lerp = (distance - m_DistanceLastFrame) > 0 ? m_FollowSpeedLerp : m_FollowDeceleration;
 
-        if (longestDistance > m_MaxDistance)
-            m_Speed = m_ChaseSpeed;
+        if (distance > m_MaxDistance)
+        {
+            speed = m_ChaseSpeed;
+            lerp = m_ChaseSpeedLerp;
+        }
+        else if (distance < m_MinDistance)
+        {
+            speed = m_FollowSpeed;
+        }
         else
         {
-            var ratio = longestDistance / (m_MaxDistance);
-            m_Speed = Mathf.Lerp(m_ChaseSpeed, 0f, 1 - ratio);
+            var t = ((distance - m_MinDistance) * 100) / (m_MaxDistance - m_MinDistance);
+            speed = m_FollowSpeed + (m_ChaseCurve.Evaluate(t) * (m_ChaseSpeed - m_FollowSpeed));
         }
 
-        m_Direction = distance.normalized;
+        m_DistanceLastFrame = distance;
+        m_Speed = Mathf.MoveTowards(m_Speed, speed, lerp * Time.deltaTime);
+        m_Direction = direction;
     }
 
     void FixedUpdate()
     {
         if (m_Target == null)
             return;
+
+        if (m_Charging)
+        {
+            m_RigidBody.velocity = m_ChargingDirection;
+            return;
+        }
 
         if (m_Dashing)
         {
@@ -122,12 +162,13 @@ public class Enemy : MonoBehaviour
         GameManager.instance.KillPlayer();
     }
 
-#if DEBUG
-    void OnDrawGizmos()
+    private float GetDistance()
     {
-        var style = new GUIStyle();
-        style.normal.textColor = Color.black;
-        Handles.Label(transform.position, ((int)(k_DashTime - m_TimeSinceLastDash)).ToString(), style);
+        // distance between 2 points sqrt( (x2 - x1)^2 + (y2 - y1)^2 )
+        return Mathf.Sqrt(
+            Mathf.Pow(m_Target.transform.position.x - transform.position.x, 2) +
+            Mathf.Pow(m_Target.transform.position.y - transform.position.y, 2)
+        );
     }
-#endif
+
 }

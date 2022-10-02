@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour
         m_PushingRightWall = m_IsAgainstRightWall && m_Movement.x > 0;
 
         // If we are wall sliding
-        if (m_WallSliding)
+        if (m_WallSliding || (!m_Grounded && againstWall))
         {
             if (!againstWall)
                 m_WallSliding = false;
@@ -230,7 +230,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleWallSlide()
     {
-        if (pushingAgainstWall && !m_WallSliding)
+        if (!m_Grounded && pushingAgainstWall && !m_WallSliding)
         {
             m_WallSliding = true;
             m_TimeStartedSliding = Time.time;
@@ -264,6 +264,7 @@ public class PlayerController : MonoBehaviour
             if (Time.time >= m_TimeStartedDash + m_DashLength)
             {
                 m_Dashing = false;
+                m_RigidBody.velocity = new Vector3(m_RigidBody.velocity.x > 15 ? 15 : m_RigidBody.velocity.x, m_RigidBody.velocity.y);
 
                 if (m_Grounded)
                     m_HasDashed = false;
@@ -280,8 +281,6 @@ public class PlayerController : MonoBehaviour
         m_HasDoubleJumped = doubleJump;
         m_HasJumped = true;
     }
-
-
 
     private void DrawGrounderGizmos()
     {

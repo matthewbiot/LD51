@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 500
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 1, g: 0, b: 0.7653513, a: 1}
   m_FlipX: 0
@@ -121,11 +121,64 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_RigidBody: {fileID: 3716872246682751212}
-  m_Target: {fileID: 0}
+  m_MinDistance: 10
   m_MaxDistance: 20
-  m_ChaseSpeed: 20
-  m_DashReactionStartTime: 1
-  m_DashReactionEndTime: 0.8
+  m_FollowSpeed: 1
+  m_FollowSpeedLerp: 3
+  m_FollowDeceleration: 15
+  m_ChaseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.030372672
+      outSlope: -0.030372672
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.057259712
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.4204676
+      outSlope: 2.4204676
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.026584864
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_ChaseSpeed: 10
+  m_ChaseSpeedLerp: 5
+  m_DashReactionStartTime: 2
+  m_DashReactionEndTime: 1
+  m_ChargingDistance: 2
+  m_ChargingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   m_DashSpeed: 35
   m_DashLength: 1.2
 --- !u!58 &3716872246682751213
