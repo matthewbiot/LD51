@@ -27,7 +27,7 @@ public class Crossfade : MonoBehaviour
             StopCoroutine(m_FadeCoroutine);
 
         var realTime = m_Group.alpha > 0 ? (1 - m_Group.alpha) * fadeTime : fadeTime;
-        m_FadeCoroutine = StartCoroutine(DoFade(realTime, 1, onComplete));
+        m_FadeCoroutine = StartCoroutine(DoFade(realTime, true, 1, onComplete));
     }
 
     public void FadeIn(float fadeTime, Action onComplete = null)
@@ -36,7 +36,7 @@ public class Crossfade : MonoBehaviour
             StopCoroutine(m_FadeCoroutine);
 
         var realTime = m_Group.alpha < 1 ? m_Group.alpha * fadeTime : fadeTime;
-        m_FadeCoroutine = StartCoroutine(DoFade(realTime, 0, onComplete));
+        m_FadeCoroutine = StartCoroutine(DoFade(realTime, false, 0, onComplete));
     }
 
     private bool m_Started;
@@ -46,10 +46,10 @@ public class Crossfade : MonoBehaviour
     private float m_StartValue;
     private float m_EndValue;
 
-    private IEnumerator DoFade(float fadeTime, float target, Action onComplete)
+    private IEnumerator DoFade(float fadeTime, bool interactable, float target, Action onComplete)
     {
-        m_Group.blocksRaycasts = true;
-        m_Group.interactable = true;
+        m_Group.blocksRaycasts = interactable;
+        m_Group.interactable = interactable;
 
         var start = m_Group.alpha;
 
@@ -61,6 +61,7 @@ public class Crossfade : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        m_Group.alpha = target;
         onComplete?.Invoke();
     }
 }

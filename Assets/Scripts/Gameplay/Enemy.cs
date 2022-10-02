@@ -122,10 +122,12 @@ public class Enemy : MonoBehaviour
         GameManager.instance.KillPlayer();
     }
 
+#if DEBUG
     void OnDrawGizmos()
     {
         var style = new GUIStyle();
         style.normal.textColor = Color.black;
         Handles.Label(transform.position, ((int)(k_DashTime - m_TimeSinceLastDash)).ToString(), style);
     }
+#endif
 }

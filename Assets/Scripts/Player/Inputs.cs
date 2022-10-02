@@ -6,19 +6,20 @@ using UnityEngine.InputSystem;
 
 public static class Inputs
 {
-    public static void Add(InputAction action, Action<InputAction.CallbackContext> onAction)
+    public static void Add(InputAction action, Action<InputAction.CallbackContext> onAction, bool enable = true)
     {
         if (action == null)
             return;
 
-        action.Enable();
+        if (enable)
+            action.Enable();
 
         action.started += onAction;
         action.performed += onAction;
         action.canceled += onAction;
     }
 
-    public static void Remove(InputAction action, Action<InputAction.CallbackContext> onAction)
+    public static void Remove(InputAction action, Action<InputAction.CallbackContext> onAction, bool disable = true)
     {
         if (action == null)
             return;
@@ -27,6 +28,7 @@ public static class Inputs
         action.performed -= onAction;
         action.canceled -= onAction;
 
-        action.Disable();
+        if (disable)
+            action.Disable();
     }
 }

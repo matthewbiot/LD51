@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,15 +42,19 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-
     public void StartGame()
     {
+        LoadLevel("Level01");
+    }
 
+    public void Exit()
+    {
+        Application.Quit();
     }
 
     public void LoadLevel(string levelName)
     {
-        m_Crossfade.FadeOut(m_FadeTime, () =>
+        FadeOut(() =>
         {
             m_SceneToUnload = SceneManager.GetActiveScene().name;
             m_CurrentLoadingScene = levelName;
@@ -69,11 +74,11 @@ public class GameManager : MonoBehaviour
 
     public void KillPlayer()
     {
-        m_Crossfade.FadeOut(0.2f, () =>
+        FadeOut(() =>
         {
             m_Deaths++;
             m_CurrentRoom.Restart(m_CurrentEnemy);
-            m_Crossfade.FadeIn(0.2f);
+            FadeIn();
         });
     }
 
@@ -90,9 +95,17 @@ public class GameManager : MonoBehaviour
 
     private void ShowGame()
     {
-        m_Crossfade.FadeIn(m_FadeTime, () =>
-        {
+        FadeIn();
+    }
 
-        });
+
+    private void FadeOut(Action onComplete = null)
+    {
+        m_Crossfade.FadeOut(m_FadeTime, onComplete);
+    }
+
+    private void FadeIn(Action onComplete = null)
+    {
+        m_Crossfade.FadeIn(m_FadeTime, onComplete);
     }
 }
