@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Point",
+                    "type": "Value",
+                    "id": "dcc0ae14-4c4a-457f-b751-40b2e9b66f6a",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Dash",
                     "type": "Button",
                     "id": "bc8eaa21-510e-4c6c-b9b4-6ac48a1d4a05",
@@ -36,6 +45,15 @@
                     "name": "Pause",
                     "type": "Button",
                     "id": "76acd716-34de-4144-8d05-0da9233a433f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LeftClick",
+                    "type": "Button",
+                    "id": "06e813b8-cfd7-455f-b767-164a659df3b2",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -238,6 +256,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1304d9ed-ac11-4ed2-879a-c91310213f50",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "LeftClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bdab0953-96dd-491a-9741-0d28092669fd",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Point",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

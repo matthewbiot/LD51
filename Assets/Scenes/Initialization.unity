@@ -292,6 +292,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4022975055724293475, guid: 78f2ed353e68ec043abd05c804614e6e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.14901961
+      objectReference: {fileID: 0}
+    - target: {fileID: 4022975055724293475, guid: 78f2ed353e68ec043abd05c804614e6e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.10980392
+      objectReference: {fileID: 0}
+    - target: {fileID: 4022975055724293475, guid: 78f2ed353e68ec043abd05c804614e6e, type: 3}
+      propertyPath: m_Color.r
+      value: 0.101960786
+      objectReference: {fileID: 0}
     - target: {fileID: 4022975056581111301, guid: 78f2ed353e68ec043abd05c804614e6e, type: 3}
       propertyPath: m_Name
       value: CrossfadeCanvas

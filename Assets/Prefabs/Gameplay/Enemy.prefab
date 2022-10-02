@@ -188,6 +188,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   m_DashSpeed: 35
   m_DashLength: 1.2
+  m_DashSound: {fileID: 8300000, guid: ab06d1b61097b3b4fb4bf56d0724c481, type: 3}
 --- !u!58 &3716872246682751213
 CircleCollider2D:
   m_ObjectHideFlags: 0

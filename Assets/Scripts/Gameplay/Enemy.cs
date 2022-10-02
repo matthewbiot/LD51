@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] AnimationCurve m_ChargingCurve;
     [SerializeField] float m_DashSpeed;
     [SerializeField] float m_DashLength;
+    [SerializeField] AudioClip m_DashSound;
 
     private GameObject m_Target;
 
@@ -89,6 +90,7 @@ public class Enemy : MonoBehaviour
             m_Dashing = true;
             m_Charging = false;
             m_TimeStartedDash = Time.time;
+            AudioManager.instance.PlaySFX(m_DashSound);
             return;
         }
         m_TimeSinceLastDash += Time.deltaTime;

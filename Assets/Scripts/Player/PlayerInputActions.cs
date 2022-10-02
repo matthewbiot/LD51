@@ -37,6 +37,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
+                    ""name"": ""Point"",
+                    ""type"": ""Value"",
+                    ""id"": ""dcc0ae14-4c4a-457f-b751-40b2e9b66f6a"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
                     ""name"": ""Dash"",
                     ""type"": ""Button"",
                     ""id"": ""bc8eaa21-510e-4c6c-b9b4-6ac48a1d4a05"",
@@ -58,6 +67,15 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""76acd716-34de-4144-8d05-0da9233a433f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""06e813b8-cfd7-455f-b767-164a659df3b2"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -260,6 +278,28 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1304d9ed-ac11-4ed2-879a-c91310213f50"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""LeftClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bdab0953-96dd-491a-9741-0d28092669fd"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Point"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -587,9 +627,11 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
         // Game
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
+        m_Game_Point = m_Game.FindAction("Point", throwIfNotFound: true);
         m_Game_Dash = m_Game.FindAction("Dash", throwIfNotFound: true);
         m_Game_Jump = m_Game.FindAction("Jump", throwIfNotFound: true);
         m_Game_Pause = m_Game.FindAction("Pause", throwIfNotFound: true);
+        m_Game_LeftClick = m_Game.FindAction("LeftClick", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Move = m_Menu.FindAction("Move", throwIfNotFound: true);
@@ -658,17 +700,21 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Game;
     private IGameActions m_GameActionsCallbackInterface;
     private readonly InputAction m_Game_Move;
+    private readonly InputAction m_Game_Point;
     private readonly InputAction m_Game_Dash;
     private readonly InputAction m_Game_Jump;
     private readonly InputAction m_Game_Pause;
+    private readonly InputAction m_Game_LeftClick;
     public struct GameActions
     {
         private @PlayerInputActions m_Wrapper;
         public GameActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Game_Move;
+        public InputAction @Point => m_Wrapper.m_Game_Point;
         public InputAction @Dash => m_Wrapper.m_Game_Dash;
         public InputAction @Jump => m_Wrapper.m_Game_Jump;
         public InputAction @Pause => m_Wrapper.m_Game_Pause;
+        public InputAction @LeftClick => m_Wrapper.m_Game_LeftClick;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -681,6 +727,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_GameActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnMove;
+                @Point.started -= m_Wrapper.m_GameActionsCallbackInterface.OnPoint;
+                @Point.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnPoint;
+                @Point.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnPoint;
                 @Dash.started -= m_Wrapper.m_GameActionsCallbackInterface.OnDash;
                 @Dash.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnDash;
                 @Dash.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnDash;
@@ -690,6 +739,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pause.started -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnPause;
+                @LeftClick.started -= m_Wrapper.m_GameActionsCallbackInterface.OnLeftClick;
+                @LeftClick.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnLeftClick;
+                @LeftClick.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnLeftClick;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -697,6 +749,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Point.started += instance.OnPoint;
+                @Point.performed += instance.OnPoint;
+                @Point.canceled += instance.OnPoint;
                 @Dash.started += instance.OnDash;
                 @Dash.performed += instance.OnDash;
                 @Dash.canceled += instance.OnDash;
@@ -706,6 +761,9 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
+                @LeftClick.started += instance.OnLeftClick;
+                @LeftClick.performed += instance.OnLeftClick;
+                @LeftClick.canceled += instance.OnLeftClick;
             }
         }
     }
@@ -804,9 +862,11 @@ public partial class @PlayerInputActions : IInputActionCollection2, IDisposable
     public interface IGameActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnPoint(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
+        void OnLeftClick(InputAction.CallbackContext context);
     }
     public interface IMenuActions
     {

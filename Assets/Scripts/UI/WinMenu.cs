@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class WinMenu : MonoBehaviour
 {
-    private const string k_DeathsMessage = "You spent {0:D2}:{1:D2}s playing and died {2} times.";
+    private const string k_DeathsMessage = "You spent {0:D2}m{1:D2}s playing and died {2} times.";
 
     [SerializeField] TextMeshProUGUI m_DeathsText;
 
