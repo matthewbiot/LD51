@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Crossfade: {fileID: 0}
-  m_FadeTime: 0.2
+  m_FadeTime: 0.1

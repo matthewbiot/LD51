@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] float m_FadeTime;
 
 
+    private bool m_Playing;
+    private float m_TimeInGame;
     private int m_Deaths;
     private Room m_CurrentRoom;
     private Enemy m_CurrentEnemy;
@@ -25,6 +27,8 @@ public class GameManager : MonoBehaviour
     private string m_CurrentLoadingScene;
 
     public Enemy Enemy => m_CurrentEnemy;
+    public int Deaths => m_Deaths;
+    public float TimeInGame => m_TimeInGame;
 
     public void Awake()
     {
@@ -42,9 +46,37 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    void Update()
+    {
+        if (!m_Playing)
+            return;
+
+        m_TimeInGame += Time.deltaTime;
+    }
+
     public void StartGame()
     {
+        m_Deaths = 0;
+        m_TimeInGame = 0f;
+        m_Playing = true;
         LoadLevel("Level01");
+    }
+
+    public void EndGame()
+    {
+        m_Playing = false;
+    }
+
+    public void Pause()
+    {
+        m_Playing = false;
+        Time.timeScale = 0f;
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1f;
+        m_Playing = true;
     }
 
     public void Exit()

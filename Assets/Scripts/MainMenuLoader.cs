@@ -5,6 +5,9 @@ public class MainMenuLoader : MonoBehaviour
 {
     void Start()
     {
+        if (SceneManager.GetActiveScene().name != "Initialization")
+            return;
+
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.LoadSceneAsync("MainMenu", LoadSceneMode.Additive);
     }

@@ -19,7 +19,7 @@ public class PauseMenu : MonoBehaviour
     {
         m_Yes.onClick.AddListener(() =>
         {
-            Time.timeScale = 1f;
+            GameManager.instance.Resume();
             GameManager.instance.LoadLevel("MainMenu");
         });
         m_No.onClick.AddListener(() => ShowDialog(false));
@@ -34,7 +34,7 @@ public class PauseMenu : MonoBehaviour
     {
         Inputs.Remove(m_Inputs.Menu.Cancel, OnCancel);
 
-        Time.timeScale = 1f;
+        GameManager.instance.Resume();
         m_Inputs.Game.Enable();
         m_Inputs.Menu.Disable();
         m_Background.SetActive(false);
@@ -49,7 +49,7 @@ public class PauseMenu : MonoBehaviour
     {
         m_Resume.Select();
         m_Background.SetActive(true);
-        Time.timeScale = 0f;
+        GameManager.instance.Pause();
         m_Inputs.Game.Disable();
         m_Inputs.Menu.Enable();
 

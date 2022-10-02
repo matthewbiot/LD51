@@ -5,12 +5,13 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     [SerializeField] GameObject m_EnemyPrefab;
+    [SerializeField] bool m_LoadEnemy = true;
     [SerializeField] Room m_StartingRoom;
     [SerializeField] string m_NextLevel;
 
     void Start()
     {
-        if (m_EnemyPrefab == null || m_StartingRoom == null)
+        if (m_EnemyPrefab == null || m_StartingRoom == null || !m_LoadEnemy)
             return;
 
         var gameObject = Instantiate(m_EnemyPrefab);
