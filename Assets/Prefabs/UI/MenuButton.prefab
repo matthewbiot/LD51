@@ -139,6 +139,7 @@ MonoBehaviour:
   m_NormalTextColor: {r: 1, g: 1, b: 1, a: 1}
   m_PressedTextColor: {r: 0.6132076, g: 0.13594696, b: 0.46029887, a: 1}
   m_SelectedTextColor: {r: 1, g: 0.19215687, b: 0.7411765, a: 1}
+  m_Clip: {fileID: 8300000, guid: a955c5fea02996644955c86fe5027270, type: 3}
 --- !u!1 &1287490736192455795
 GameObject:
   m_ObjectHideFlags: 0

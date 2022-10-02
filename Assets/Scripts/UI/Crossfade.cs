@@ -39,13 +39,6 @@ public class Crossfade : MonoBehaviour
         m_FadeCoroutine = StartCoroutine(DoFade(realTime, false, 0, onComplete));
     }
 
-    private bool m_Started;
-
-    private float m_ElapsedTime;
-    private float m_FadeTime;
-    private float m_StartValue;
-    private float m_EndValue;
-
     private IEnumerator DoFade(float fadeTime, bool interactable, float target, Action onComplete)
     {
         m_Group.blocksRaycasts = interactable;

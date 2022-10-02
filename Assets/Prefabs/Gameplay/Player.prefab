@@ -156,9 +156,12 @@ MonoBehaviour:
   m_JumpVelocityFalloff: 22.5
   m_FallMultiplier: 7
   m_EnableDoubleJump: 1
+  m_JumpSound: {fileID: 8300000, guid: bc93302ee3dd6d243a5253ccdb1a0ded, type: 3}
+  m_LandSound: {fileID: 8300000, guid: b6f67b1f33d8e9f4db662c1096116b2a, type: 3}
   m_WallJumpMovementLerp: 5
   m_DashSpeed: 35
   m_DashLength: 0.1
+  m_DashSound: {fileID: 8300000, guid: 72b44c6fcb4bd86409f04f7c0355a8d2, type: 3}
   m_GroundMask:
     serializedVersion: 2
     m_Bits: 64

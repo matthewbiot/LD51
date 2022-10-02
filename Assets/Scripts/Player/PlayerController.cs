@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float m_JumpVelocityFalloff = 8f;
     [SerializeField] private float m_FallMultiplier = 7f;
     [SerializeField] private bool m_EnableDoubleJump;
+    [SerializeField] private AudioClip m_JumpSound;
+    [SerializeField] private AudioClip m_LandSound;
 
     [Header("Wall Jump")]
     [SerializeField] private float m_WallJumpMovementLerp = 5;
@@ -37,6 +39,7 @@ public class PlayerController : MonoBehaviour
     [Header("Dash")]
     [SerializeField] private float m_DashSpeed = 15;
     [SerializeField] private float m_DashLength = 1;
+    [SerializeField] AudioClip m_DashSound;
 
 
     [Header("Detection")]
@@ -160,7 +163,7 @@ public class PlayerController : MonoBehaviour
             m_HasDoubleJumped = false;
             m_CurrentMovementLerpSpeed = 100;
 
-            // m_JumpPressed = false;
+            AudioManager.instance.PlaySFX(m_LandSound);
         }
         // we were grounded but we're not
         else if (m_Grounded && !grounded)
@@ -271,6 +274,7 @@ public class PlayerController : MonoBehaviour
             m_HasDashed = true;
             m_TimeStartedDash = Time.time;
             m_RigidBody.gravityScale = 0;
+            AudioManager.instance.PlaySFX(m_DashSound);
         }
 
         if (m_Dashing)
@@ -331,6 +335,7 @@ public class PlayerController : MonoBehaviour
         m_RigidBody.velocity = direction;
         m_HasDoubleJumped = doubleJump;
         m_HasJumped = true;
+        AudioManager.instance.PlaySFX(m_JumpSound);
     }
 
     private void DrawGrounderGizmos()

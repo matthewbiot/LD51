@@ -10,6 +10,8 @@ public class MenuButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [SerializeField] Color m_PressedTextColor;
     [SerializeField] Color m_SelectedTextColor;
 
+    [SerializeField] AudioClip m_Clip;
+
     private bool m_Selected;
     private bool m_Pressed;
 
@@ -36,6 +38,8 @@ public class MenuButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             m_ButtonText.color = m_SelectedTextColor;
             m_Selected = true;
+
+            AudioManager.instance.PlaySFX(m_Clip);
         }
         else if (currentSelected != gameObject && m_Selected)
         {
